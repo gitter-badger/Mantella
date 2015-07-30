@@ -127,6 +127,7 @@
 #include <mantella_bits/optimisationAlgorithm/populationBasedOptimisationAlgorithm.hpp>
 #include <mantella_bits/optimisationAlgorithm/populationBasedOptimisationAlgorithm/cuckooSearch.hpp>
 #include <mantella_bits/optimisationAlgorithm/populationBasedOptimisationAlgorithm/standardParticleSwarmOptimisation2011.hpp>
+#include <mantella_bits/optimisationAlgorithm/populationBasedOptimisationAlgorithm/parallelStandardParticleSwarmOptimisation2011.hpp>
 
 // Property analyses
 #include <mantella_bits/propertyAnalysis.hpp>
