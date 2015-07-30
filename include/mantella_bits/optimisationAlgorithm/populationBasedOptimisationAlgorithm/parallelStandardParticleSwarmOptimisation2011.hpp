@@ -313,7 +313,7 @@ namespace mant {
     }
 
     template<typename T>
-    bool ParallelStandardParticleSwarmOptimisation2011<T>::isRootNode() {
+    bool ParallelStandardParticleSwarmOptimisation2011<T>::isRootNode() noexcept{
 
         if(this->nodeRank_ == 0) {
             return true;
