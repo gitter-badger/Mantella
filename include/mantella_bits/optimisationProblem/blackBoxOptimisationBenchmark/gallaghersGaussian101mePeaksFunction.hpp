@@ -154,9 +154,9 @@ namespace mant {
     template <typename T>
     void GallaghersGaussian101mePeaksFunction<T>::deserialise(
         std::vector<double> serialisedOptimisationProblem) {
-      rotationQ_.set_size(this->numberOfDimensions_, this->numberOfDimensions_);
-      for(std::size_t n = 0; n < rotationQ_.n_elem; ++n) {
-        rotationQ_(n) = static_cast<T>(serialisedOptimisationProblem.back());
+      localParameterTranslations_.set_size(this->numberOfDimensions_, 21);
+      for(std::size_t n = 0; n < localParameterTranslations_.n_elem; ++n) {
+        localParameterTranslations_(n) = static_cast<T>(serialisedOptimisationProblem.back());
         serialisedOptimisationProblem.pop_back();
       }
       
@@ -166,9 +166,9 @@ namespace mant {
         serialisedOptimisationProblem.pop_back();
       }
       
-      localParameterTranslations_.set_size(this->numberOfDimensions_, 21);
-      for(std::size_t n = 0; n < localParameterTranslations_.n_elem; ++n) {
-        localParameterTranslations_(n) = static_cast<T>(serialisedOptimisationProblem.back());
+      rotationQ_.set_size(this->numberOfDimensions_, this->numberOfDimensions_);
+      for(std::size_t n = 0; n < rotationQ_.n_elem; ++n) {
+        rotationQ_(n) = static_cast<T>(serialisedOptimisationProblem.back());
         serialisedOptimisationProblem.pop_back();
       }
         
