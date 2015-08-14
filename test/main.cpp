@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <iostream>
 
+// MPI
+#include <mpi.h>
+
 // Mantella
 #include <mantella>
 
