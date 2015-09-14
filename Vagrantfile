@@ -76,17 +76,28 @@ Vagrant.configure(2) do |config|
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++ 90
     
     sudo apt-get install -qq gdb
+    sudo apt-get install -qq lcov
   
     sudo apt-get install -qq cmake
   
     sudo apt-get install -qq libblas-dev
     sudo apt-get install -qq liblapack-dev
+    
+    wget --quiet -O openblas.tar.gz http://github.com/xianyi/OpenBLAS/archive/v0.2.14.tar.gz
+    mkdir openblas
+    tar -xzf openblas.tar.gz -C ./openblas --strip-components=1
+    cd openblas
+    make
+    sudo make install PREFIX=/usr/local
+    cd ..
+    rm -Rf openblas openblas.tar.gz
+    
     wget --quiet -O armadillo.tar.gz http://downloads.sourceforge.net/project/arma/armadillo-5.100.2.tar.gz
     mkdir armadillo
     tar -xzf armadillo.tar.gz -C ./armadillo --strip-components=1
     cd armadillo
     cmake .
-    make -j 4
+    make
     sudo make install
     cd ..
     rm -Rf armadillo armadillo.tar.gz
@@ -99,6 +110,9 @@ Vagrant.configure(2) do |config|
     
     sudo apt-get install -qq libmpich2-dev
     
-    sudo apt-get install -qq lcov
+    wget --quiet -O redis.tar.gz http://download.redis.io/releases/redis-3.0.3.tar.gz
+    tar -xzf redis.tar.gz
+    cd redis
+    make
   SHELL
 end

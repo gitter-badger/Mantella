@@ -65,7 +65,7 @@ namespace mant {
         velocities_.col(particleIndex_) = velocityCandidate;
         particles_.col(particleIndex_) = solutionCandidate;
 
-        const double& objectiveValue = getObjectiveValue(solutionCandidate);
+        const double objectiveValue = getObjectiveValue(solutionCandidate);
 
         if (objectiveValue < localBestObjectiveValues_(particleIndex_)) {
           localBestObjectiveValues_(particleIndex_) = objectiveValue;
@@ -130,7 +130,7 @@ namespace mant {
 
   arma::Mat<arma::uword> ParticleSwarmOptimisation::getRandomNeighbourhoodTopology() {
     arma::Mat<arma::uword>topology = (arma::randu<arma::Mat<double>>(populationSize_, populationSize_) <= neighbourhoodProbability_);
-    topology.diag() += 1.0;
+    topology.diag().ones();
 
     return topology;
   }

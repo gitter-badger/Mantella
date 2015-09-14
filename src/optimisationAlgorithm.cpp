@@ -8,23 +8,9 @@
 #include <mantella_bits/config.hpp>
 #include <mantella_bits/helper/assert.hpp>
 #include <mantella_bits/helper/rng.hpp>
+#include <mantella_bits/helper/mpi.hpp>
 
 namespace mant {
-#if defined(MANTELLA_USE_MPI)
-  void mpiGetBestParameter(
-      void* firstInput,
-      void* secondInput,
-      int* size,
-      MPI_Datatype* type) {
-    double* firstParameters = static_cast<double*>(firstInput);
-    double* secondParameters = static_cast<double*>(secondInput);
-  
-    if(firstParameters[1] < secondParameters[1]) {
-      std::copy(&firstParameters[1], &firstParameters[1 + static_cast<unsigned int>(secondParameters[0])], &secondParameters[1]);
-    }
-  }
-#endif
-
   OptimisationAlgorithm::OptimisationAlgorithm(
       const std::shared_ptr<OptimisationProblem> optimisationProblem)
     : optimisationProblem_(optimisationProblem),
@@ -34,7 +20,7 @@ namespace mant {
       bestParameter_(numberOfDimensions_) {
     setMaximalNumberOfIterations(1000);
     
-#if defined(MANTELLA_USE_MPI)
+#if defined(SUPPORT_MPI)
     MPI_Comm_rank(MPI_COMM_WORLD, &nodeRank_);
     MPI_Comm_size(MPI_COMM_WORLD, &numberOfNodes_);
 #else
@@ -46,7 +32,7 @@ namespace mant {
   void OptimisationAlgorithm::optimise() {
     verify(arma::all(optimisationProblem_->getLowerBounds() <= optimisationProblem_->getUpperBounds()), "All upper bounds of the optimisation problem must be greater than or equal to its lower bound.");
     
-#if defined(MANTELLA_USE_MPI)
+#if defined(SUPPORT_MPI)
     std::vector<double> serialisedOptimisationProblem;
     unsigned int serialisedOptimisationProblemSize;
 
@@ -76,13 +62,13 @@ namespace mant {
 
     optimiseImplementation();
     
-#if defined(MANTELLA_USE_MPI)
+#if defined(SUPPORT_MPI)
     MPI_Datatype MANT_MPI_PARAMETER;
     MPI_Type_contiguous(3 + numberOfDimensions_, MPI_DOUBLE, &MANT_MPI_PARAMETER);
     MPI_Type_commit(&MANT_MPI_PARAMETER);
   
     MPI_Op MANT_MPI_GET_BEST_PARAMETER;
-    MPI_Op_create(&mpiGetBestParameter, true, &MANT_MPI_GET_BEST_PARAMETER);
+    MPI_Op_create(&mpiGetBestSample, true, &MANT_MPI_GET_BEST_PARAMETER);
     
     arma::Col<double> mpiInputParameter(3 + numberOfDimensions_);
     arma::Col<double> mpiOutputParameter(3 + numberOfDimensions_);
@@ -127,8 +113,8 @@ namespace mant {
     return (numberOfIterations_ >= maximalNumberOfIterations_);
   }
 
-  std::vector<std::pair<arma::Col<double>, double>> OptimisationAlgorithm::getSamplingProgress() const {
-    return samplingProgress_;
+  std::vector<std::pair<arma::Col<double>, double>> OptimisationAlgorithm::getSamplingHistory() const {
+    return samplingHistory_;
   }
 
   arma::Col<double> OptimisationAlgorithm::getLowerBounds() const {
@@ -161,9 +147,9 @@ namespace mant {
     const arma::Col<double>& parameter) {
     assert(parameter.n_elem == numberOfDimensions_);
     
-    if (storeSamplingProgress) {
-      const double& objectiveValue = optimisationProblem_->getObjectiveValue(parameter);
-      samplingProgress_.push_back({parameter, objectiveValue});
+    if (recordSamples) {
+      const double objectiveValue = optimisationProblem_->getObjectiveValue(parameter);
+      samplingHistory_.push_back({parameter, objectiveValue});
       return objectiveValue;
     } else {
       return optimisationProblem_->getObjectiveValue(parameter);

@@ -11,17 +11,17 @@
 // Mantella
 #include <mantella>
 
-TEST_CASE("GridSearch", "") {
+TEST_CASE("GridSearch") {
   SECTION(".optimise") {
     SECTION("Checking the procedure with the default number of samples per dimension.") {
       std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
       optimisationProblem->setLowerBounds(arma::randu<arma::Col<double>>(optimisationProblem->numberOfDimensions_) * 200 - 100);
       optimisationProblem->setUpperBounds(optimisationProblem->getLowerBounds() + arma::randu<arma::Col<double>>(optimisationProblem->numberOfDimensions_) * 100 + 0.01);
       
-      mant::storeSamplingProgress = true;
+      mant::recordSamples = true;
       mant::GridSearch gridSearch(optimisationProblem);
       gridSearch.optimise();
-      mant::storeSamplingProgress = false;
+      mant::recordSamples = false;
 
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingProgress();
       
@@ -41,13 +41,13 @@ TEST_CASE("GridSearch", "") {
       optimisationProblem->setLowerBounds(arma::randu<arma::Col<double>>(optimisationProblem->numberOfDimensions_) * 200 - 100);
       optimisationProblem->setUpperBounds(optimisationProblem->getLowerBounds() + arma::randu<arma::Col<double>>(optimisationProblem->numberOfDimensions_) * 100 + 0.01);
       
-      mant::storeSamplingProgress = true;
+      mant::recordSamples = true;
       mant::GridSearch gridSearch(optimisationProblem);
       arma::Col<arma::uword> numberOfSamplesPerDimension = arma::randi<arma::Col<arma::uword>>(optimisationProblem->numberOfDimensions_, arma::distr_param(2, 10));
       gridSearch.setNumberOfSamplesPerDimension(numberOfSamplesPerDimension);
       gridSearch.setMaximalNumberOfIterations(arma::prod(numberOfSamplesPerDimension));
       gridSearch.optimise();
-      mant::storeSamplingProgress = false;
+      mant::recordSamples = false;
 
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingProgress();
       

@@ -88,7 +88,7 @@ namespace mant {
           c2 = 3.1;
         }
 
-        const double& logAbsoluteValue = std::log(std::abs(value));
+        const double logAbsoluteValue = std::log(std::abs(value));
         return std::copysign(1.0, value) * std::exp(logAbsoluteValue + 0.049 * (std::sin(c1 * logAbsoluteValue) + std::sin(c2 * logAbsoluteValue)));
       } else {
         return 0.0;
@@ -117,7 +117,7 @@ namespace mant {
       return boundConstraintsValue;
     }
 
-#if defined(MANTELLA_USE_MPI)
+#if defined(SUPPORT_MPI)
     std::vector<double> BlackBoxOptimisationBenchmark::serialise() const {
       return OptimisationProblem::serialise();
     }

@@ -22,14 +22,11 @@
 #define MANTELLA_VERSION_PATCH 0
 
 //
-// Configuration
-//
-
-#include <mantella_bits/config.hpp>
-
-//
 // Mantella
 //
+
+// Configuration
+#include <mantella_bits/config.hpp>
 
 // Assert
 #include <mantella_bits/helper/assert.hpp>
@@ -37,13 +34,50 @@
 // Random number generator
 #include <mantella_bits/helper/rng.hpp>
 
+// MPI
+#include <mantella_bits/helper/mpi.hpp>
+
 // Helper
 #include <mantella_bits/helper/geometry.hpp>
 #include <mantella_bits/helper/printable.hpp>
 #include <mantella_bits/helper/quasiRandomSequence.hpp>
 #include <mantella_bits/helper/random.hpp>
+#include <mantella_bits/helper/regression.hpp>
 #include <mantella_bits/helper/setTheory.hpp>
+#include <mantella_bits/helper/statistic.hpp>
 #include <mantella_bits/helper/unorderedContainer.hpp>
+
+// Distance functions
+#include <mantella_bits/distanceFunction.hpp>
+#include <mantella_bits/distanceFunction/pNorm.hpp>
+#include <mantella_bits/distanceFunction/mahalabonisDistance.hpp>
+
+// Regression functions
+#include <mantella_bits/regressionFunction.hpp>
+#include <mantella_bits/regressionFunction/constantPolynomialRegressionFunction.hpp>
+#include <mantella_bits/regressionFunction/linearPolynomialRegressionFunction.hpp>
+#include <mantella_bits/regressionFunction/quadraticPolynomialRegressionFunction.hpp>
+#include <mantella_bits/regressionFunction/cubicPolynomialRegressionFunction.hpp>
+
+// Correlation functions
+#include <mantella_bits/correlationFunction.hpp>
+#include <mantella_bits/correlationFunction/polynomialCorrelationFunction.hpp>
+#include <mantella_bits/correlationFunction/splineCorrelationFunction.hpp>
+#include <mantella_bits/correlationFunction/exponentialCorrelationFunction.hpp>
+#include <mantella_bits/correlationFunction/gaussianCorrelationFunction.hpp>
+  
+// Radial basis functions
+#include <mantella_bits/radialBasisFunction.hpp>
+#include <mantella_bits/radialBasisFunction/polyharmonicSplineRadialBasisFunction.hpp>
+#include <mantella_bits/radialBasisFunction/multiquadraticRadialBasisFunction.hpp>
+#include <mantella_bits/radialBasisFunction/gaussianRadialBasisFunction.hpp>
+  
+// Samples selections
+#include <mantella_bits/samplesSelection.hpp>
+#include <mantella_bits/samplesSelection/bestFittingSamplesSelection.hpp>
+#include <mantella_bits/samplesSelection/bestNeighbourhoodSamplesSelection.hpp>
+#include <mantella_bits/samplesSelection/bestSamplesSelection.hpp>
+#include <mantella_bits/samplesSelection/randomSamplesSelection.hpp>
 
 // Optimisation problems
 #include <mantella_bits/optimisationProblem.hpp>
@@ -83,6 +117,12 @@
 #include <mantella_bits/optimisationProblem/roboticsOptimisationProblem/robotModel/parallelKinematicMachine6PUPS.hpp>
 #include <mantella_bits/optimisationProblem/roboticsOptimisationProblem/robotModel/multiLevelStewartPlatform.hpp>
 #include <mantella_bits/optimisationProblem/roboticsOptimisationProblem/endEffectorPoseError.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel/polynomialFunctionModel.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel/radialBasisFunctionModel.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel/krigingModel.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel/multivariateAdaptiveRegressionSplinesModel.hpp>
+#include <mantella_bits/optimisationProblem/surrogateModel/artificialNeuralNetwork.hpp>
 
 // Optimisation algorithms
 #include <mantella_bits/optimisationAlgorithm.hpp>
@@ -109,21 +149,15 @@
 #include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/fitnessDistanceCorrelationAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/lipschitzContinuityAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/hoelderContinuityAnalysis.hpp>
-#include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/linearFunctionModelAnalysis.hpp>
-#include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/quadraticFunctionModelAnalysis.hpp>
+#include <mantella_bits/propertyAnalysis/passivePropertyAnalysis/polynomialFunctionModelAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/activePropertyAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/activePropertyAnalysis/additiveSeparabilityAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/activePropertyAnalysis/multiplicativeSeparabilityAnalysis.hpp>
-#include <mantella_bits/propertyAnalysis/activePropertyAnalysis/linearProportionalityAnalysis.hpp>
+#include <mantella_bits/propertyAnalysis/activePropertyAnalysis/polynomialProportionalityAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/activePropertyAnalysis/neighbourhoodPeriodicityAnalysis.hpp>
 #include <mantella_bits/propertyAnalysis/activePropertyAnalysis/translationPeriodicityAnalysis.hpp>
-
-// Surrogate models
-#include <mantella_bits/surrogateModel.hpp>
-#include <mantella_bits/surrogateModel/artificialNeuralNetwork.hpp>
-#include <mantella_bits/surrogateModel/gaussianMixtureModel.hpp>
-#include <mantella_bits/surrogateModel/krigingModel.hpp>
-#include <mantella_bits/surrogateModel/linearFunctionModel.hpp>
-#include <mantella_bits/surrogateModel/multivariateAdaptiveRegressionSplinesModel.hpp>
-#include <mantella_bits/surrogateModel/quadraticFunctionModel.hpp>
-#include <mantella_bits/surrogateModel/radialBasisFunctionModel.hpp>
+  
+// Cluster analyses
+#include <mantella_bits/clusterAnalysis.hpp>
+#include <mantella_bits/clusterAnalysis/basicSequentialAlgorithmicScheme.hpp>
+#include <mantella_bits/clusterAnalysis/twoThresholdSequentialAlgorithmicScheme.hpp>

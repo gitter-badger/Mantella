@@ -16,8 +16,8 @@ namespace mant {
     MultiLevelStewartPlatform::MultiLevelStewartPlatform(
         const std::vector<ParallelKinematicMachine6PUPS>& platformLevels)
       : RobotModel(6, 6 * platformLevels.size() - 6),
-        numberOfPlatformLevels_(platformLevels.size()),
-        platformLevels_(platformLevels) {
+        platformLevels_(platformLevels),
+        numberOfPlatformLevels_(platformLevels_.size()) {
       for (arma::uword n = 0; n < numberOfPlatformLevels_; ++n) {
         verify(platformLevels_.at(n).numberOfRedundantJoints_ == 0, ""); // TODO
       }
@@ -48,7 +48,7 @@ namespace mant {
         const arma::Row<double>& partialActuation = platformLevels_.at(n).getActuation(redundantJointsActuation.subvec(6 * n - 6, 6 * n - 1), {});
         
         assert(partialActuation.n_elem == numberOfActiveJoints_);
-        assert(!arma::any(partialActuation < platformLevels_.at(n).getMinimalActiveJointsActuation()) && !arma::any(partialActuation > platformLevels_.at(n).getMaximalActiveJointsActuation()));
+        assert(!arma::any(partialActuation < platformLevels_.at(n).minimalActiveJointsActuation_) && !arma::any(partialActuation > platformLevels_.at(n).maximalActiveJointsActuation_));
         
         actuation = arma::join_rows(actuation, partialActuation);
       }
@@ -64,7 +64,7 @@ namespace mant {
       
       double endEffectorPoseError = platformLevels_.at(0).getEndEffectorPoseError(endEffectorPose, {});
       for (arma::uword n = 1; n < platformLevels_.size(); ++n) {
-        const double& partialEndEffectorPoseError = platformLevels_.at(n).getEndEffectorPoseError(redundantJointsActuation.subvec(6 * n - 6, 6 * n - 1), {});
+        const double partialEndEffectorPoseError = platformLevels_.at(n).getEndEffectorPoseError(redundantJointsActuation.subvec(6 * n - 6, 6 * n - 1), {});
       
         assert(partialEndEffectorPoseError >= 0);
       

@@ -11,7 +11,7 @@ namespace mant {
   }
 
   void GridSearch::optimiseImplementation() {
-    verify(arma::prod(numberOfSamplesPerDimension_) <= maximalNumberOfIterations_ * numberOfNodes_, "The product of all number of samples per dimension must be less than the maximal number of iterations.");
+    verify(arma::prod(numberOfSamplesPerDimension_) <= maximalNumberOfIterations_ * static_cast<arma::uword>(numberOfNodes_), "The product of all number of samples per dimension must be less than the maximal number of iterations.");
     
     std::vector<arma::Col<double>> samples;
     for (arma::uword n = 0; n < numberOfDimensions_; ++n) {
@@ -20,7 +20,7 @@ namespace mant {
 
     arma::Col<arma::uword> sampleIndicies = arma::zeros<arma::Col<arma::uword>>(numberOfDimensions_);
     for(arma::uword n = 0; n < arma::prod(numberOfSamplesPerDimension_); ++n) {
-      if (n % numberOfNodes_ == nodeRank_) {
+      if (static_cast<int>(n) % numberOfNodes_ == nodeRank_) {
         ++numberOfIterations_;
 
         arma::Col<double> candidateParameter(numberOfDimensions_);
