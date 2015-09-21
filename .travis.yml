@@ -21,7 +21,9 @@ before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   
   # Clang (Needed until Travis CI updates to Ubuntu 14.04+)
-  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
+  - if [ "$CXX" == "clang++" ]; then wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -; fi
+  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main'; fi
+  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.6 main'; fi
 
   # CMake (Needed until Travis CI updates to Ubuntu 14.04+)
   - sudo add-apt-repository -y ppa:kalakris/cmake
@@ -32,29 +34,37 @@ install:
   # GCC
   - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq --force-yes g++-4.9; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set gcc /usr/bin/gcc-4.9; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set g++ /usr/bin/g++-4.9; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set gcov /usr/bin/gcov-4.9; fi
   
   # Clang
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq --force-yes g++-4.8; fi
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
-  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/clang-3.4 90; fi
-  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++-3.4 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set clang /usr/bin/clang-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set clang++ /usr/bin/clang++-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/clang-3.6 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set gcc /usr/bin/clang-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++-3.6 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set g++ /usr/bin/clang++-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-format-3.6; fi
   
   # CMake (Needed until Travis CI updates to Ubuntu 14.04+)
   - sudo apt-get install -qq cmake
   
   # Armadillo C++
   - sudo apt-get install -qq libblas-dev
-#  - sudo apt-get install -qq libopenblas-dev
   - sudo apt-get install -qq liblapack-dev
   - wget -O armadillo.tar.gz http://downloads.sourceforge.net/project/arma/armadillo-5.100.2.tar.gz
   - mkdir armadillo
   - tar -xzf armadillo.tar.gz -C ./armadillo --strip-components=1
   - cd armadillo
   - cmake .
-  - make -j 4
-  - sudo make install
+  - make --quiet -j 4
+  - sudo make --quiet install
   - cd ..
   - rm -Rf armadillo armadillo.tar.gz
 
@@ -80,7 +90,7 @@ install:
   - if [ "$CXX" == "g++" ]; then mkdir lcov; fi
   - if [ "$CXX" == "g++" ]; then tar -xzf lcov.tar.gz -C ./lcov --strip-components=1; fi
   - if [ "$CXX" == "g++" ]; then cd lcov; fi
-  - if [ "$CXX" == "g++" ]; then sudo make install; fi
+  - if [ "$CXX" == "g++" ]; then sudo make --quiet install; fi
   - if [ "$CXX" == "g++" ]; then cd ..; fi
   - if [ "$CXX" == "g++" ]; then rm -Rf lcov lcov.tar.gz; fi
 #  - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq lcov; fi
@@ -98,10 +108,14 @@ addons:
     branch_pattern: coverity_scan
 
 script:
+  # Builds tests an measure code coverage (GCC only)  
   - if [ "$CXX" == "g++" ]; then cmake -DBUILD_TESTS=On -DMEASURE_CODE_COVERAGE=On .; fi
+  # Builds MPI-based tests (Clang  only)  
   - if [ "$CXX" == "clang++" ]; then cmake -DBUILD_TESTS=On -DSUPPORT_MPI=On .; fi
   - make -j 4
   - sudo make install
+  - if [ "$CXX" == "clang++" ]; then git diff --name-only HEAD~1..HEAD | grep "\.[ch]pp$" | while read file; do if [[ `clang-format-3.6 -output-replacements-xml "$file" | grep "<replacement " | wc -l` -ne 0 ]]; then echo "${file} is not properly formatted. Please run 'clang-format -i ${file}'"; exit 1; fi; done; fi
+  
   
 after_success:
   - if [ "$CXX" == "g++" ]; then cd ./CMakeFiles/mantella.dir/src/; fi

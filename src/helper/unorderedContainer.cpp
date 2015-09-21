@@ -1,11 +1,11 @@
 #include <mantella_bits/helper/unorderedContainer.hpp>
 
 // C++ standard library
-#include <utility>
+#include <functional>
 
 namespace mant {
-  arma::uword Hash::operator() (
-    const arma::Col<double>& key) const {
+  arma::uword Hash::operator()(
+      const arma::Col<double>& key) const {
     // Start with the hash of the first value ...
     arma::uword hashedKey = std::hash<double>()(key(0));
 
@@ -17,12 +17,12 @@ namespace mant {
 
     return hashedKey;
   }
-  
-  bool IsEqual::operator() (
-    const arma::Col<double>& firstKey,
-    const arma::Col<double>& secondKey) const {
-  // TODO Add exception
-      
+
+  bool IsEqual::operator()(
+      const arma::Col<double>& firstKey,
+      const arma::Col<double>& secondKey) const {
+    // TODO Add exception
+
     return arma::all(firstKey == secondKey);
   }
 }

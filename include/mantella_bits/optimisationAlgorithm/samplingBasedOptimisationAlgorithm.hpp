@@ -1,14 +1,14 @@
 #pragma once
 
-// Armadillo
-#include <armadillo>
+// C++ standard library
+#include <memory>
 
 // Mantella
 #include <mantella_bits/optimisationAlgorithm.hpp>
 
 namespace mant {
   class SamplingBasedOptimisationAlgorithm : public OptimisationAlgorithm {
-    public:
-      using OptimisationAlgorithm::OptimisationAlgorithm;
+   public:
+    using OptimisationAlgorithm::OptimisationAlgorithm;
   };
 }
