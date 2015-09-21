@@ -42,7 +42,6 @@ TEST_CASE(
     mant::HillClimbing hillClimbing(optimisationProblem);
     hillClimbing.setMaximalNumberOfIterations(1000);
 
-<<<<<<< HEAD
     SECTION("Test default value"){
       mant::storeSamplingProgress = true;
       hillClimbing.optimise();
@@ -117,22 +116,6 @@ TEST_CASE(
         CHECK(0.25 > static_cast<double>(histogram.max() - histogram.min()) / static_cast<double>(lengths.n_elem));
       }
     }
-=======
-    SECTION(
-        "Test default value") {
-      //TODO
-    }
-
-    SECTION(
-        "Test with parameter") {
-      //TODO
-    }
-  }
-
-  SECTION(
-      ".optimise") {
-    // TODO
->>>>>>> master
   }
 
   SECTION(

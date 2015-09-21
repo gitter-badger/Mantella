@@ -420,7 +420,7 @@ if(BUILD_TESTS)
     # test/samplesSelection/testRandomSamplesSelection.cpp
 
     # # Optimisation problems
-    # test/testOptimisationProblem.cpp
+    test/testOptimisationProblem.cpp
     # test/optimisationProblem/blackBoxOptimisationBenchmark/testAttractiveSectorFunction.cpp
     # test/optimisationProblem/blackBoxOptimisationBenchmark/testBentCigarFunction.cpp
     # test/optimisationProblem/blackBoxOptimisationBenchmark/testBuecheRastriginFunction.cpp
@@ -464,16 +464,16 @@ if(BUILD_TESTS)
     # test/optimisationProblem/surrogateModel/testArtificialNeuralNetwork.cpp
     
     # # Optimisation algorithms
-    # test/testOptimisationAlgorithm.cpp
-    # test/optimisationAlgorithm/testSamplingBasedOptimisationAlgorithm.cpp
-    # test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testRandomSearch.cpp
-    # test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testGridSearch.cpp
-    # test/optimisationAlgorithm/testTrajectoryBasedOptimisationAlgorithm.cpp
-    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHillClimbing.cpp
-    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
-    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testSimulatedAnnealing.cpp
-    # test/optimisationAlgorithm/testPopulationBasedOptimisationAlgorithm.cpp
-    # test/optimisationAlgorithm/populationBasedOptimisationAlgorithm/testParticleSwarmOptimisation.cpp
+    test/testOptimisationAlgorithm.cpp
+    test/optimisationAlgorithm/testSamplingBasedOptimisationAlgorithm.cpp
+    test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testRandomSearch.cpp
+    test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testGridSearch.cpp
+    test/optimisationAlgorithm/testTrajectoryBasedOptimisationAlgorithm.cpp
+    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHillClimbing.cpp
+    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
+    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testSimulatedAnnealing.cpp
+    test/optimisationAlgorithm/testPopulationBasedOptimisationAlgorithm.cpp
+    test/optimisationAlgorithm/populationBasedOptimisationAlgorithm/testParticleSwarmOptimisation.cpp
     
     # # Samples selection
     # test/testSamplesSelection.cpp
