@@ -26,7 +26,7 @@ TEST_CASE(
       gridSearch.optimise();
       mant::recordSamples = false;
 
-      std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingProgress();
+      std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingHistory();
 
       std::vector<arma::Col<double>> expectedSamples;
       for (const auto& firstParameter : arma::linspace<arma::Col<double>>(optimisationProblem->getLowerBounds()(0), optimisationProblem->getUpperBounds()(0), 10)) {
@@ -35,7 +35,7 @@ TEST_CASE(
         }
       }
 
-      COMPARE_SET(actualSamples, expectedSamples);
+      HAS_SAME_PARAMETERS(actualSamples, expectedSamples);
     }
 
     SECTION(
@@ -52,7 +52,7 @@ TEST_CASE(
       gridSearch.optimise();
       mant::recordSamples = false;
 
-      std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingProgress();
+      std::vector<std::pair<arma::Col<double>, double>> actualSamples = gridSearch.getSamplingHistory();
 
       std::vector<arma::Col<double>> expectedSamples;
       for (const auto& firstParameter : arma::linspace<arma::Col<double>>(optimisationProblem->getLowerBounds()(0), optimisationProblem->getUpperBounds()(0), numberOfSamplesPerDimension(0))) {
@@ -67,7 +67,7 @@ TEST_CASE(
         }
       }
 
-      COMPARE_SET(actualSamples, expectedSamples);
+      HAS_SAME_PARAMETERS(actualSamples, expectedSamples);
     }
   }
 

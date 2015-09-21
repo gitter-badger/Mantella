@@ -25,7 +25,7 @@ TEST_CASE(
       randomSearch.setMaximalNumberOfIterations(100000);
       randomSearch.optimise();
 
-      std::vector<std::pair<arma::Col<double>, double>> actualSamples = randomSearch.getSamplingProgress();
+      std::vector<std::pair<arma::Col<double>, double>> actualSamples = randomSearch.getSamplingHistory();
 
       std::vector<arma::Col<double>> intervals;
       for (arma::uword n = 0; n < optimisationProblem->numberOfDimensions_; ++n) {
