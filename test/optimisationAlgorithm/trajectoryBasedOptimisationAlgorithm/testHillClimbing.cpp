@@ -36,10 +36,11 @@ class TestHillClimbing : public mant::HillClimbing {
 
 
 TEST_CASE("HillClimbing", "" ) {
+  std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
+  mant::HillClimbing hillClimbing(optimisationProblem);
+  hillClimbing.setMaximalNumberOfIterations(10000);
+
   SECTION(".setMaximalStepSize" ) {
-    std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-    mant::HillClimbing hillClimbing(optimisationProblem);
-    hillClimbing.setMaximalNumberOfIterations(1000);
 
     SECTION("Test default value" ) {
       mant::recordSamples = true;
@@ -49,7 +50,7 @@ TEST_CASE("HillClimbing", "" ) {
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
       arma::Col<double> expectedMaximalStepSize = ((optimisationProblem->getUpperBounds() - optimisationProblem->getLowerBounds()) / 10.0);
       std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-      arma::Col<double>::fixed<999> lengths;
+      arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
 
       for (arma::uword i = 1; i < actualSamples.size(); i++) {
         arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
@@ -70,7 +71,7 @@ TEST_CASE("HillClimbing", "" ) {
 
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
       std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-      arma::Col<double>::fixed<999> lengths;
+      arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
       for (arma::uword i = 1; i < actualSamples.size(); i++) {
         arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
         lengths.at(i-1) = arma::norm(vector);
@@ -83,9 +84,6 @@ TEST_CASE("HillClimbing", "" ) {
   }
 
   SECTION(".setMinimalStepSize" ) {
-    std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-    mant::HillClimbing hillClimbing(optimisationProblem);
-    hillClimbing.setMaximalNumberOfIterations(1000);
 
     SECTION("Test default value" ) {
       mant::recordSamples = true;
@@ -94,7 +92,7 @@ TEST_CASE("HillClimbing", "" ) {
 
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
       std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-      arma::Col<double>::fixed<999> lengths;
+      arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
 
       for (arma::uword i = 1; i < actualSamples.size(); i++) {
         arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
@@ -115,7 +113,7 @@ TEST_CASE("HillClimbing", "" ) {
 
       std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
       std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-      arma::Col<double>::fixed<999> lengths;
+      arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
       for (arma::uword i = 1; i < actualSamples.size(); i++) {
         arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
         lengths.at(i-1) = arma::norm(vector);
@@ -128,9 +126,6 @@ TEST_CASE("HillClimbing", "" ) {
   }
 
   SECTION(".optimise" ) {
-    std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-    mant::HillClimbing hillClimbing(optimisationProblem);
-    hillClimbing.setMaximalNumberOfIterations(1000);
 
     SECTION("Test uniform distribution" ){
 
@@ -142,8 +137,8 @@ TEST_CASE("HillClimbing", "" ) {
         std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
         arma::Col<double> expectedMaximalStepSize = ((optimisationProblem->getUpperBounds() - optimisationProblem->getLowerBounds()) / 10.0);
         std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-        arma::Col<double>::fixed<999> angles;
-        arma::Col<double>::fixed<999> lengths;
+        arma::Col<double> angles(hillClimbing.getMaximalNumberOfIterations() - 1);
+        arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
         for (arma::uword i = 1; i < actualSamples.size(); i++) {
           arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
           angles.at(i-1) = std::atan2(vector.at(0), vector.at(1));
@@ -153,11 +148,9 @@ TEST_CASE("HillClimbing", "" ) {
           }
         }
 
-        arma::Col<arma::uword> histogram = arma::hist(angles, arma::linspace<arma::Col<double>>(-arma::datum::pi, arma::datum::pi, 20));
-        CHECK(0.25 > static_cast<double>(histogram.max() - histogram.min()) / static_cast<double>(angles.n_elem));
+        IS_UNIFORM(angles, -arma::datum::pi, arma::datum::pi);
+        IS_UNIFORM(lengths, 0.0, arma::norm(expectedMaximalStepSize));
 
-        histogram = arma::hist(lengths, arma::linspace<arma::Col<double>>(0, arma::norm(expectedMaximalStepSize), 100));
-        CHECK(0.25 > static_cast<double>(histogram.max() - histogram.min()) / static_cast<double>(lengths.n_elem));
       }
 
       SECTION("Maximal step size are not equal per dimmension" ) {
@@ -169,8 +162,8 @@ TEST_CASE("HillClimbing", "" ) {
 
         std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
         std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
-        arma::Col<double>::fixed<999> angles;
-        arma::Col<double>::fixed<999> lengths;
+        arma::Col<double> angles(hillClimbing.getMaximalNumberOfIterations() - 1);
+        arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
         for (arma::uword i = 1; i < actualSamples.size(); i++) {
           arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
           angles.at(i-1) = std::atan2(vector.at(0), vector.at(1));
@@ -180,19 +173,13 @@ TEST_CASE("HillClimbing", "" ) {
           }
         }
 
-        arma::Col<arma::uword> histogram = arma::hist(angles, arma::linspace<arma::Col<double>>(-arma::datum::pi, arma::datum::pi, 20));
-        CHECK(0.25 > static_cast<double>(histogram.max() - histogram.min()) / static_cast<double>(angles.n_elem));
-
-        histogram = arma::hist(lengths, arma::linspace<arma::Col<double>>(0, arma::norm(expectedMaximalStepSize), 100));
-        CHECK(0.25 > static_cast<double>(histogram.max() - histogram.min()) / static_cast<double>(lengths.n_elem));
+        IS_UNIFORM(angles, -arma::datum::pi, arma::datum::pi);
+        IS_UNIFORM(lengths, 0.0, arma::norm(expectedMaximalStepSize));
       }
     }
   }
 
-  SECTION(
-      "Exception tests" ) {
-    std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-    mant::HillClimbing hillClimbing(optimisationProblem);
+  SECTION( "Exception tests" ) {
 
     SECTION(
         "Throws an exception, if the MaximalStepSize zero" ) {
@@ -230,11 +217,8 @@ TEST_CASE("HillClimbing", "" ) {
 
   }
 
-  SECTION(
-      ".toString" ) {
-    SECTION(
-        "Returns the expected class name." ) {
-      std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
+  SECTION( ".toString" ) {
+    SECTION( "Returns the expected class name." ) {
       CHECK(mant::HillClimbing(optimisationProblem).toString() ==
             "hill_climbing" );
     }
