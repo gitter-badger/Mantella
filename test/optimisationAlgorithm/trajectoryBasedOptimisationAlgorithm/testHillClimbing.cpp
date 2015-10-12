@@ -9,29 +9,31 @@
 // Mantella
 #include <mantella>
 
+extern std::string testDirectory;
+
 class TestHillClimbing : public mant::HillClimbing {
- public:
-  TestHillClimbing(
-      const std::shared_ptr<mant::OptimisationProblem> optimisationProblem)
+  public:
+    TestHillClimbing(
+        const std::shared_ptr<mant::OptimisationProblem> optimisationProblem)
       : mant::HillClimbing(optimisationProblem),
         neighboursIndex_(0) {
-  }
+    }
 
-  void setVelocitys(
-      const arma::Mat<double>& neighbours) {
-    neighbours_ = neighbours;
-  }
+    void setVelocitys(
+        const arma::Mat<double>& neighbours) {
+      neighbours_ = neighbours;
+    }
 
- protected:
-  arma::Col<double> getRandomNeighbour(
-      const arma::Col<double>& parameter,
-      const arma::Col<double>& minimalDistance,
-      const arma::Col<double>& maximalDistance) override {
-    return neighbours_.col(neighboursIndex_++);
-  }
+  protected:
+    arma::Col<double> getRandomNeighbour(
+        const arma::Col<double>& parameter,
+        const arma::Col<double>& minimalDistance,
+        const arma::Col<double>& maximalDistance) override {
+      return neighbours_.col(neighboursIndex_++);
+    }
 
-  arma::uword neighboursIndex_;
-  arma::Mat<double> neighbours_;
+    arma::uword neighboursIndex_;
+    arma::Mat<double> neighbours_;
 };
 
 
@@ -136,9 +138,11 @@ TEST_CASE("HillClimbing", "" ) {
 
         std::vector<std::pair<arma::Col<double>, double>> actualSamples = hillClimbing.getSamplingHistory();
         arma::Col<double> expectedMaximalStepSize = ((optimisationProblem->getUpperBounds() - optimisationProblem->getLowerBounds()) / 10.0);
+
         std::pair<arma::Col<double>, double> bestParameter = actualSamples.at(0);
         arma::Col<double> angles(hillClimbing.getMaximalNumberOfIterations() - 1);
         arma::Col<double> lengths(hillClimbing.getMaximalNumberOfIterations() - 1);
+
         for (arma::uword i = 1; i < actualSamples.size(); i++) {
           arma::Col<double> vector = actualSamples.at(i).first - bestParameter.first;
           angles.at(i-1) = std::atan2(vector.at(0), vector.at(1));
@@ -176,41 +180,75 @@ TEST_CASE("HillClimbing", "" ) {
         IS_UNIFORM(angles, -arma::datum::pi, arma::datum::pi);
         IS_UNIFORM(lengths, 0.0, arma::norm(expectedMaximalStepSize));
       }
+
+    }
+
+    SECTION("Test the algorithm´s workflow" ){
+
+      arma::Mat<double> velocitys;
+      REQUIRE(velocitys.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_11x2.velocitys"));
+
+      arma::Col<double> initParameter;
+      REQUIRE(initParameter.load(testDirectory + "/Users/SRA/Documents/Workspace/Mantella/test/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x2.initParameter"));
+
+      arma::Col<double> bestValue;
+      REQUIRE(bestValue.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x1.bestValue"));
+
+      arma::Mat<double> parameter;
+      REQUIRE(parameter.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_12x2.expected"));
+
+      TestHillClimbing testHillClimbing(optimisationProblem);
+      testHillClimbing.setInitialParameter(initParameter);
+      testHillClimbing.setMaximalNumberOfIterations(parameter.n_cols);
+      testHillClimbing.setVelocitys(velocitys);
+
+      mant::recordSamples = true;
+      testHillClimbing.optimise();
+      mant::recordSamples = false;
+
+      CHECK(testHillClimbing.getBestObjectiveValue() == Approx(bestValue(0)));
+
+      std::vector<arma::Col<double>> expected;
+      for(arma::uword i=0; i < parameter.n_cols; i++){
+        expected.push_back(parameter.col(i));
+      }
+      HAS_SAME_PARAMETERS(testHillClimbing.getSamplingHistory(),expected);
+
     }
   }
 
   SECTION( "Exception tests" ) {
 
     SECTION(
-        "Throws an exception, if the MaximalStepSize zero" ) {
+          "Throws an exception, if the MaximalStepSize zero" ) {
       CHECK_THROWS_AS(hillClimbing.setMaximalStepSize({0, 0}), std::logic_error);
     }
 
     SECTION(
-        "Throws an exception, if the MaximalStepSize is lower than MinimalStepSize" ) {
+          "Throws an exception, if the MaximalStepSize is lower than MinimalStepSize" ) {
       hillClimbing.setMinimalStepSize({4.0, 4.2});
       //CHECK_THROWS_AS(hillClimbing.setMaximalStepSize({1.0, 4.0}), std::logic_error);
     }
 
     SECTION(
-        "Throws an exception, if the size of MaximalStepSize is not equal to the number of dimension of the problem" ) {
+          "Throws an exception, if the size of MaximalStepSize is not equal to the number of dimension of the problem" ) {
       CHECK_THROWS_AS(hillClimbing.setMaximalStepSize(arma::randu<arma::Mat<double>>(std::uniform_int_distribution<arma::uword>(3, 10)(mant::Rng::getGenerator())) * 200 - 100), std::logic_error);
       CHECK_THROWS_AS(hillClimbing.setMaximalStepSize(arma::randu<arma::Mat<double>>(1) * 200 - 100), std::logic_error);
     }
 
     SECTION(
-        "Throws an exception, if the MinimalStepSize lower than zero" ) {
+          "Throws an exception, if the MinimalStepSize lower than zero" ) {
       CHECK_THROWS_AS(hillClimbing.setMinimalStepSize({-0.001, -8.5}), std::logic_error);
     }
 
     SECTION(
-        "Throws an exception, if the MinimalStepSize is higher than MaximalStepSize" ) {
+          "Throws an exception, if the MinimalStepSize is higher than MaximalStepSize" ) {
       hillClimbing.setMaximalStepSize({4.0, 4.2});
       //CHECK_THROWS_AS(hillClimbing.setMinimalStepSize({6.0, 6.0}), std::logic_error);
     }
 
     SECTION(
-        "Throws an exception, if the size of MinimalStepSize is not equal to the number of dimension of the problem" ) {
+          "Throws an exception, if the size of MinimalStepSize is not equal to the number of dimension of the problem" ) {
       CHECK_THROWS_AS(hillClimbing.setMinimalStepSize(arma::randu<arma::Mat<double>>(std::uniform_int_distribution<arma::uword>(3, 10)(mant::Rng::getGenerator())) * 200 - 100), std::logic_error);
       CHECK_THROWS_AS(hillClimbing.setMinimalStepSize(arma::randu<arma::Mat<double>>(1) * 200 - 100), std::logic_error);
     }
@@ -224,3 +262,4 @@ TEST_CASE("HillClimbing", "" ) {
     }
   }
 }
+
