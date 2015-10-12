@@ -42,7 +42,7 @@ TEST_CASE("HillClimbing", "" ) {
   mant::HillClimbing hillClimbing(optimisationProblem);
   hillClimbing.setMaximalNumberOfIterations(10000);
 
-  SECTION(".setMaximalStepSize" ) {
+  SECTION(".setMaximalStepSize") {
 
     SECTION("Test default value" ) {
       mant::recordSamples = true;
@@ -85,7 +85,7 @@ TEST_CASE("HillClimbing", "" ) {
     }
   }
 
-  SECTION(".setMinimalStepSize" ) {
+  SECTION(".setMinimalStepSize") {
 
     SECTION("Test default value" ) {
       mant::recordSamples = true;
@@ -127,9 +127,9 @@ TEST_CASE("HillClimbing", "" ) {
     }
   }
 
-  SECTION(".optimise" ) {
+  SECTION(".optimise") {
 
-    SECTION("Test uniform distribution" ){
+    SECTION("Test uniform distribution"){
 
       SECTION("Maximal and Minimal step size are equal per dimmension" ) {
         mant::recordSamples = true;
@@ -183,7 +183,7 @@ TEST_CASE("HillClimbing", "" ) {
 
     }
 
-    SECTION("Test the algorithm´s workflow" ){
+    SECTION("Test the algorithm´s workflow"){
 
       arma::Mat<double> velocitys;
       REQUIRE(velocitys.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_11x2.velocitys"));
@@ -217,7 +217,7 @@ TEST_CASE("HillClimbing", "" ) {
     }
   }
 
-  SECTION( "Exception tests" ) {
+  SECTION("Exception tests") {
 
     SECTION(
           "Throws an exception, if the MaximalStepSize zero" ) {
@@ -255,7 +255,7 @@ TEST_CASE("HillClimbing", "" ) {
 
   }
 
-  SECTION( ".toString" ) {
+  SECTION(".toString") {
     SECTION( "Returns the expected class name." ) {
       CHECK(mant::HillClimbing(optimisationProblem).toString() ==
             "hill_climbing" );
