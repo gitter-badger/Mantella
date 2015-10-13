@@ -42,7 +42,7 @@ class TestHillClimbing : public mant::HillClimbing {
 
         velocities.col(i-1) = parameters.col(i) - bestParameter;
 
-        if(optimisationProblem->getObjectiveValue(parameters.col(i)) < bestValue){
+        if (optimisationProblem->getObjectiveValue(parameters.col(i)) < bestValue) {
           bestValue = optimisationProblem->getObjectiveValue(parameters.col(i));
           bestParameter = parameters.col(i);
         }
@@ -245,7 +245,7 @@ TEST_CASE("HillClimbing", "" ) {
       CHECK(testHillClimbing.getBestObjectiveValue() == Approx(bestValue(0)));
 
       std::vector<arma::Col<double>> expected;
-      for(arma::uword i=0; i < parameter.n_cols; i++){
+      for (arma::uword i=0; i < parameter.n_cols; i++) {
         expected.push_back(parameter.col(i));
       }
       HAS_SAME_PARAMETERS(testHillClimbing.getSamplingHistory(),expected);
@@ -263,7 +263,7 @@ TEST_CASE("HillClimbing", "" ) {
     SECTION(
           "Throws an exception, if the MaximalStepSize is lower than MinimalStepSize" ) {
       hillClimbing.setMinimalStepSize({4.0, 4.2});
-      //CHECK_THROWS_AS(hillClimbing.setMaximalStepSize({1.0, 4.0}), std::logic_error);
+      CHECK_THROWS_AS(hillClimbing.setMaximalStepSize({1.0, 4.0}), std::logic_error);
     }
 
     SECTION(
@@ -280,7 +280,7 @@ TEST_CASE("HillClimbing", "" ) {
     SECTION(
           "Throws an exception, if the MinimalStepSize is higher than MaximalStepSize" ) {
       hillClimbing.setMaximalStepSize({4.0, 4.2});
-      //CHECK_THROWS_AS(hillClimbing.setMinimalStepSize({6.0, 6.0}), std::logic_error);
+      CHECK_THROWS_AS(hillClimbing.setMinimalStepSize({6.0, 6.0}), std::logic_error);
     }
 
     SECTION(
