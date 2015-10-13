@@ -27,14 +27,14 @@ mark_as_advanced(
   RUN_IWYU
 )
 
-message(STATUS "")
+message(STATUS "") 
 message(STATUS "Building Mantella (version: ${MANTELLA_VERSION}).")
 
 # ------------------------
 # CHECKING PREREQUIREMENTS
 # ------------------------
 
-message(STATUS "")
+message(STATUS "") 
 message(STATUS "Checking prerequirements.")
 
 set(REQUIRED_ARMADILLO_VERSION "5.100.2")
@@ -58,7 +58,7 @@ else()
   endif()
 endif()
 include_directories(${ARMADILLO_INCLUDE_DIR})
-
+  
 if(SUPPORT_MPI)
   find_package(MPI REQUIRED)
   include_directories(${MPI_INCLUDE_PATH})
@@ -68,7 +68,7 @@ endif()
 # CONFIGURING COMPILER
 # --------------------
 
-message(STATUS "")
+message(STATUS "") 
 message(STATUS "Configuring compiler.")
 
 # Add Clang detection
@@ -83,7 +83,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 else()
   message(STATUS "- Detected currently unsupported compiler: ${CMAKE_CXX_COMPILER_ID}.")
 endif()
-
+  
 if(RUN_IWYU)
   message(STATUS "- Running IWYU (instead of generating an excecutable/library).")
   message(STATUS "  - Use 'cmake ... -DRUN_IWYU=Off' to exclude this.")
@@ -91,7 +91,7 @@ if(RUN_IWYU)
   CMAKE_FORCE_C_COMPILER(include-what-you-use CLANG)
   CMAKE_FORCE_CXX_COMPILER(include-what-you-use CLANG)
 else()
-  # Use ccache to speed up recompilation, if possible.
+  # Use ccache to speed up recompilation, if possible. 
   find_program(CCACHE_FOUND ccache)
   if(CCACHE_FOUND)
     message(STATUS "- Using ccache to speed up recompilations.")
@@ -104,7 +104,7 @@ endif()
 # SETTING COMPILER FLAGS
 # ----------------------
 
-message(STATUS "")
+message(STATUS "") 
 message(STATUS "Setting compiler flags.")
 
 message(STATUS "- Enabling C++11 features.")
@@ -126,7 +126,7 @@ if(MEASURE_CODE_COVERAGE)
 else()
   message(STATUS "- Using level 3 code optimisation.")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-
+  
   if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
   endif()
@@ -146,7 +146,7 @@ else()
   message(STATUS "- Excluding OpenMP support.")
   message(STATUS "  - Use 'cmake ... -DSUPPORT_OMP=On' to add this.")
 endif()
-
+    
 if(CMAKE_COMPILER_IS_CLANGXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments")
 endif()
@@ -155,7 +155,7 @@ endif()
 # BUILDING LIBRARY
 # ----------------
 
-message(STATUS "")
+message(STATUS "") 
 message(STATUS "Configuring library build.")
 
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -165,7 +165,7 @@ endif()
 if(NOT ARCHIVE_OUTPUT_DIRECTORY)
   set(ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 endif()
-
+   
 # Include Mantella
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 
@@ -182,16 +182,16 @@ configure_file(${PROJECT_SOURCE_DIR}/include/mantella_bits/config.hpp.cmake ${PR
 add_library(mantella SHARED
   # Configuration
   src/config.cpp
-
+  
   # Asserts
   src/helper/assert.cpp
 
   # Random number generator
   src/helper/rng.cpp
-
+  
   # MPI
   src/helper/mpi.cpp
-
+  
   # Helper
   src/helper/geometry.cpp
   src/helper/printable.cpp
@@ -206,7 +206,7 @@ add_library(mantella SHARED
   src/distanceFunction.cpp
   src/distanceFunction/pNorm.cpp
   src/distanceFunction/mahalabonisDistance.cpp
-
+  
   # Regression functions
   src/regressionFunction.cpp
   src/regressionFunction/constantPolynomialRegressionFunction.cpp
@@ -220,20 +220,20 @@ add_library(mantella SHARED
   src/correlationFunction/splineCorrelationFunction.cpp
   src/correlationFunction/exponentialCorrelationFunction.cpp
   src/correlationFunction/gaussianCorrelationFunction.cpp
-
+  
   # Radial basis functions
   src/radialBasisFunction.cpp
   src/radialBasisFunction/polyharmonicSplineRadialBasisFunction.cpp
   src/radialBasisFunction/multiquadraticRadialBasisFunction.cpp
   src/radialBasisFunction/gaussianRadialBasisFunction.cpp
-
+  
   # Samples selections
   src/samplesSelection.cpp
   src/samplesSelection/bestFittingSamplesSelection.cpp
   src/samplesSelection/bestNeighbourhoodSamplesSelection.cpp
   src/samplesSelection/bestSamplesSelection.cpp
   src/samplesSelection/randomSamplesSelection.cpp
-
+  
   # Optimisation problems
   src/optimisationProblem.cpp
   src/optimisationProblem/blackBoxOptimisationBenchmark.cpp
@@ -290,7 +290,7 @@ add_library(mantella SHARED
   src/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/simulatedAnnealing.cpp
   src/optimisationAlgorithm/populationBasedOptimisationAlgorithm.cpp
   src/optimisationAlgorithm/populationBasedOptimisationAlgorithm/particleSwarmOptimisation.cpp
-
+  
   # Property analyses
   src/propertyAnalysis.cpp
   src/propertyAnalysis/passivePropertyAnalysis.cpp
@@ -304,7 +304,7 @@ add_library(mantella SHARED
   src/propertyAnalysis/activePropertyAnalysis/polynomialProportionalityAnalysis.cpp
   src/propertyAnalysis/activePropertyAnalysis/neighbourhoodPeriodicityAnalysis.cpp
   src/propertyAnalysis/activePropertyAnalysis/translationPeriodicityAnalysis.cpp
-
+  
   # Cluster analyses
   src/clusterAnalysis.cpp
   src/clusterAnalysis/basicSequentialAlgorithmicScheme.cpp
@@ -327,10 +327,10 @@ endif()
 # -------------------
 
 if(BUILD_TESTS)
-  message(STATUS "")
+  message(STATUS "") 
   message(STATUS "Configuring unit tests.")
   message(STATUS "- Use 'cmake ... -DBUILD_TESTS=Off' to exclude this.")
-
+  
   if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "- Displaying compiler warnings.")
     if(CMAKE_COMPILER_IS_CLANGXX)
@@ -345,17 +345,17 @@ if(BUILD_TESTS)
     endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-padded")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
-
+    
     message(STATUS "- Handling warnings as errors.")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif()
-
-
+  
+  
   # if(CMAKE_COMPILER_IS_CLANGXX)
     # message(STATUS "- Including a undefined behavior checker and memory error detector.")
     # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=address")
   # endif()
-
+    
   if(NOT EXECUTABLE_OUTPUT_PATH)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
   endif()
@@ -363,28 +363,28 @@ if(BUILD_TESTS)
   # Check additional prerequirements
   find_package(Catch REQUIRED) # Catch (header only)
   include_directories(${CATCH_INCLUDE_DIRS}) # Catch
-
+  
   # Include catch extensions
   include_directories(${PROJECT_SOURCE_DIR}/test)
-
+  
   # Compile tests
   # All paths must start with "test/"
   add_executable(mantellaTest
     test/main.cpp
     test/catchExtension.cpp
-
+    
     # Configuration
     test/testConfig.cpp
-
+    
     # Asserts
     test/helper/testAssert.cpp
 
     # Random number generator
     test/helper/testRng.cpp
-
+    
     # MPI
     test/helper/testMpi.cpp
-
+    
     # Helper
     test/helper/testGeometry.cpp
     test/helper/testPrintable.cpp
@@ -399,7 +399,7 @@ if(BUILD_TESTS)
     # test/testDistanceFunction.cpp
     # test/distanceFunction/testPNorm.cpp
     # test/distanceFunction/testMahalabonisDistance.cpp
-
+    
     # # Regression functions
     # test/testRegressionFunction.cpp
     # test/regressionFunction/testConstantPolynomialRegressionFunction.cpp
@@ -413,13 +413,13 @@ if(BUILD_TESTS)
     # test/correlationFunction/testSplineCorrelationFunction.cpp
     # test/correlationFunction/testExponentialCorrelationFunction.cpp
     # test/correlationFunction/testGaussianCorrelationFunction.cpp
-
+      
     # # Radial basis functions
     # test/testRadialBasisFunction.cpp
     # test/radialBasisFunction/testPolyharmonicSplineRadialBasisFunction.cpp
     # test/radialBasisFunction/testMultiquadraticRadialBasisFunction.cpp
     # test/radialBasisFunction/testGaussianRadialBasisFunction.cpp
-
+      
     # # Samples selections
     # test/testSamplesSelection.cpp
     # test/samplesSelection/testBestFittingSamplesSelection.cpp
@@ -470,26 +470,26 @@ if(BUILD_TESTS)
     # test/optimisationProblem/surrogateModel/testKrigingModel.cpp
     # test/optimisationProblem/surrogateModel/testMultivariateAdaptiveRegressionSplinesModel.cpp
     # test/optimisationProblem/surrogateModel/testArtificialNeuralNetwork.cpp
-
-    # # Optimisation algorithms
-    test/testOptimisationAlgorithm.cpp
-    test/optimisationAlgorithm/testSamplingBasedOptimisationAlgorithm.cpp
-    test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testRandomSearch.cpp
-    test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testGridSearch.cpp
+    
+    # Optimisation algorithms
+    # test/testOptimisationAlgorithm.cpp
+    # test/optimisationAlgorithm/testSamplingBasedOptimisationAlgorithm.cpp
+    # test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testRandomSearch.cpp
+    # test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testGridSearch.cpp
     test/optimisationAlgorithm/testTrajectoryBasedOptimisationAlgorithm.cpp
     test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHillClimbing.cpp
-    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
-    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testSimulatedAnnealing.cpp
-    test/optimisationAlgorithm/testPopulationBasedOptimisationAlgorithm.cpp
-    test/optimisationAlgorithm/populationBasedOptimisationAlgorithm/testParticleSwarmOptimisation.cpp
-
+    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
+    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testSimulatedAnnealing.cpp
+    # test/optimisationAlgorithm/testPopulationBasedOptimisationAlgorithm.cpp
+    # test/optimisationAlgorithm/populationBasedOptimisationAlgorithm/testParticleSwarmOptimisation.cpp
+    
     # # Samples selection
     # test/testSamplesSelection.cpp
     # test/samplesSelection/testBestFittingSamplesSelection.cpp
     # test/samplesSelection/testBestNeighbourhoodSamplesSelection.cpp
     # test/samplesSelection/testBestSamplesSelection.cpp
     # test/samplesSelection/testRandomSamplesSelection.cpp
-
+    
     # # Property analysis
     # test/testPropertyAnalysis.cpp
     # test/propertyAnalysis/passivePropertyAnalysis/testFitnessDistanceCorrelationAnalysis.cpp
@@ -502,7 +502,7 @@ if(BUILD_TESTS)
     # test/propertyAnalysis/activePropertyAnalysis/testPolynomialProportionalityAnalysis.cpp
     # test/propertyAnalysis/activePropertyAnalysis/testNeighbourhoodPeriodicityAnalysis.cpp
     # test/propertyAnalysis/activePropertyAnalysis/testTranslationPeriodicityAnalysis.cpp
-
+  
     # # Cluster analyses
     # test/testClusterAnalysis.cpp
     # test/clusterAnalysis/testBasicSequentialAlgorithmicScheme.cpp
@@ -511,7 +511,7 @@ if(BUILD_TESTS)
 
   # Link against prerequirements
   target_link_libraries(mantellaTest mantella)
-
+  
   if(ARMA_USE_WRAPPER)
     target_link_libraries(mantella ${ARMADILLO_LIBRARIES})
   else()
@@ -531,7 +531,7 @@ if(BUILD_TESTS)
 
   message(STATUS "- All tests will automatically be started after the library is build.")
 else()
-  message(STATUS "")
+  message(STATUS "") 
   message(STATUS "Skipping unit tests.")
   message(STATUS "- Use 'cmake ... -DBUILD_TESTS=On' to add this.")
 endif()

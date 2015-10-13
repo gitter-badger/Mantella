@@ -12,9 +12,9 @@
 extern std::string testDirectory;
 
 class TestHillClimbing : public mant::HillClimbing {
-  public:
-    TestHillClimbing(
-        const std::shared_ptr<mant::OptimisationProblem> optimisationProblem)
+ public:
+  TestHillClimbing(
+      const std::shared_ptr<mant::OptimisationProblem> optimisationProblem)
       : mant::HillClimbing(optimisationProblem),
         neighboursIndex_(0) {
     }
@@ -66,9 +66,9 @@ class TestHillClimbing : public mant::HillClimbing {
         const arma::Col<double>& maximalDistance) override {
       return neighbours_.col(neighboursIndex_++);
     }
-
-    arma::uword neighboursIndex_;
-    arma::Mat<double> neighbours_;
+    
+  arma::uword neighboursIndex_;
+  arma::Mat<double> neighbours_;
 };
 
 
