@@ -8,7 +8,7 @@ os:
   - linux
 
 compiler:
-  - clang
+  # - clang
   - gcc
 
 env:
@@ -31,21 +31,29 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  # GCC
+  # GCC (update cc, c++ and gcc, g++)
   - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq --force-yes g++-4.9; fi
-  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-4.9 1000; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set cc /usr/bin/gcc-4.9; fi
-  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 1000; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set gcc /usr/bin/gcc-4.9; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-4.9 1000; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set c++ /usr/bin/g++-4.9; fi
-  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 1000; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set g++ /usr/bin/g++-4.9; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 1000; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --set gcov /usr/bin/gcov-4.9; fi
   
-  # Clang
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-3.6; fi
-  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-3.6 90; fi
+  # Clang (update cc, c++ and clang, clang++)
+  - if [ "$CXX" == "clang++" ]; then sudo apt-get install -y clang-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-3.6 1000; fi
   - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set cc /usr/bin/clang-3.6; fi
-  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-3.6 90; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 1000; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set clang /usr/bin/clang-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-3.6 1000; fi
   - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set c++ /usr/bin/clang++-3.6; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 1000; fi
+  - if [ "$CXX" == "clang++" ]; then sudo update-alternatives --set clang++ /usr/bin/clang++-3.6; fi
   - if [ "$CXX" == "clang++" ]; then sudo apt-get install -qq clang-format-3.6; fi
   
   # CMake (Needed until Travis CI updates to Ubuntu 14.04+)
@@ -73,13 +81,6 @@ install:
   
   # MPI (This will actually install 3.x on Ubuntu 14.04+ and 2.x on previous versions)
   - sudo apt-get install -qq libmpich2-dev
-  
-  # Cereal
-  - wget -O cereal.tar.gz https://github.com/USCiLab/cereal/archive/v1.1.0.tar.gz
-  - mkdir cereal
-  - tar -xzf cereal.tar.gz -C ./cereal --strip-components=1
-  - sudo cp -R cereal/include/cereal /usr/local/include/
-  - rm -Rf cereal cereal.tar.gz
 
   # LCOV (Needed until Travis CI updates to Ubuntu 14.04+)
   - if [ "$CXX" == "g++" ]; then wget -O lcov.tar.gz https://github.com/linux-test-project/lcov/archive/v1.11.tar.gz; fi
@@ -99,7 +100,7 @@ addons:
     project:
       name: "SebastianNiemann/Mantella"
     notification_email: niemann@sra.uni-hannover.de
-    build_command_prepend: "cov-configure --compiler gcc-4.8 --template; cmake -DBUILD_TESTS=On"
+    build_command_prepend: "cov-configure --compiler gcc-4.9 --template; cmake -DBUILD_TESTS=On"
     build_command: "make -j 4"
     branch_pattern: coverity_scan
 
