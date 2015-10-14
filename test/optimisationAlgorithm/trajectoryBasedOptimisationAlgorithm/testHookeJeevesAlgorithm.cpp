@@ -61,7 +61,7 @@ TEST_CASE(
   SECTION(
       ".toString") {
     SECTION(
-        "Returns the expected class name.") {
+        "Returns a (filesystem friendly) name for the class.") {
       CHECK(mant::HookeJeevesAlgorithm(optimisationProblem).toString() ==
             "hooke_jeeves_algorithm");
     }

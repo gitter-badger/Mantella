@@ -292,7 +292,8 @@ TEST_CASE("HillClimbing", "" ) {
   }
 
   SECTION(".toString") {
-    SECTION( "Returns the expected class name." ) {
+    SECTION(
+        "Returns a (filesystem friendly) name for the class.") {
       CHECK(mant::HillClimbing(optimisationProblem).toString() ==
             "hill_climbing" );
     }

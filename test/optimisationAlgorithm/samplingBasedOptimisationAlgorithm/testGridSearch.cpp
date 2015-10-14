@@ -96,12 +96,9 @@ TEST_CASE(
     }
     
     SECTION(
-            ".toString") {
-        SECTION(
-                "Returns the expected class name.") {
-            std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-            CHECK(mant::GridSearch(optimisationProblem).toString() ==
-                  "grid_search");
-        }
+        "Returns a (filesystem friendly) name for the class.") {
+      std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
+      CHECK(mant::GridSearch(optimisationProblem).toString() ==
+            "grid_search");
     }
 }
