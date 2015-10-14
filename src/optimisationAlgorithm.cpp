@@ -168,7 +168,7 @@ namespace mant {
     assert(arma::all(maximalDistance > 0));
     assert(arma::all(minimalDistance <= maximalDistance));
 
-    return parameter + arma::normalise(arma::randn<arma::Col<double>>(parameter.n_elem)) % (minimalDistance + std::uniform_real_distribution<double>(0.0, 1.0)(Rng::getGenerator()) % (maximalDistance - minimalDistance));
+    return parameter + arma::normalise(arma::randn<arma::Col<double>>(parameter.n_elem)) % (minimalDistance + static_cast<arma::Col<double>>(std::uniform_real_distribution<double>(0.0, 1.0)(Rng::getGenerator()) * (maximalDistance - minimalDistance)));
   }
 
   bool OptimisationAlgorithm::updateBestParameter(
