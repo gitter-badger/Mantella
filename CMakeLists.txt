@@ -478,7 +478,7 @@ if(BUILD_TESTS)
     # test/optimisationAlgorithm/samplingBasedOptimisationAlgorithm/testGridSearch.cpp
     test/optimisationAlgorithm/testTrajectoryBasedOptimisationAlgorithm.cpp
     test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHillClimbing.cpp
-    # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
+    test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testHookeJeevesAlgorithm.cpp
     # test/optimisationAlgorithm/trajectoryBasedOptimisationAlgorithm/testSimulatedAnnealing.cpp
     # test/optimisationAlgorithm/testPopulationBasedOptimisationAlgorithm.cpp
     # test/optimisationAlgorithm/populationBasedOptimisationAlgorithm/testParticleSwarmOptimisation.cpp
