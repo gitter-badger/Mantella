@@ -1,4 +1,4 @@
-ar// Catch
+// Catch
 #include <catch.hpp>
 #include <catchExtension.hpp>
 
