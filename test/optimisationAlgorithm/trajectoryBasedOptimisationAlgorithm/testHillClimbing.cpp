@@ -29,7 +29,7 @@ class TestHillClimbing : public mant::HillClimbing {
         const arma::Col<double>& parameter,
         const arma::Col<double>& minimalDistance,
         const arma::Col<double>& maximalDistance) override {
-      return neighbours_.col(neighboursIndex_++);
+      return (parameter + neighbours_.col(neighboursIndex_++));
     }
     
   arma::uword neighboursIndex_;
