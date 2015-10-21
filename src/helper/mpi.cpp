@@ -1,10 +1,14 @@
-#include <mantella_bits/helper/mpi.hpp>
+#include "mantella_bits/helper/mpi.hpp"
 
 // C++ standard library
+#if defined(SUPPORT_MPI)
 #include <algorithm>
+#endif
 
 // Armadillo
+#if defined(SUPPORT_MPI)
 #include <armadillo>
+#endif
 
 #if defined(SUPPORT_MPI)
 namespace mant {
@@ -20,7 +24,7 @@ namespace mant {
       const arma::uword numberOfDimensions = static_cast<unsigned int>(firstParameters[0]);
 
       if (firstParameters[1] < secondParameters[1]) {
-        std::copy(&firstParameters[1], &firstParameters[1 + numberOfDimensions], &secondParameters[1]);
+        std::copy(&firstParameters[1], &firstParameters[2 + numberOfDimensions], &secondParameters[1]);
       }
 
       firstParameters += 2 + numberOfDimensions;

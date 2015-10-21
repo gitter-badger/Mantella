@@ -36,7 +36,6 @@ class TestHillClimbing : public mant::HillClimbing {
   arma::Mat<double> neighbours_;
 };
 
-
 TEST_CASE("HillClimbing", "" ) {
   std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
   mant::HillClimbing hillClimbing(optimisationProblem);
@@ -267,8 +266,7 @@ TEST_CASE("HillClimbing", "" ) {
   }
 
   SECTION(".toString") {
-    SECTION(
-        "Returns a (filesystem friendly) name for the class.") {
+    SECTION("Returns a (filesystem friendly) name for the class.") {
       CHECK(mant::HillClimbing(optimisationProblem).toString() ==
             "hill_climbing" );
     }
