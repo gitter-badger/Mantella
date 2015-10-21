@@ -227,7 +227,8 @@ TEST_CASE("HillClimbing", "" ) {
     SECTION(
           "Throws an exception, if the MaximalStepSize is lower than MinimalStepSize" ) {
       hillClimbing.setMinimalStepSize({4.0, 4.2});
-      CHECK_THROWS_AS(hillClimbing.setMaximalStepSize({1.0, 4.0}), std::logic_error);
+      hillClimbing.setMaximalStepSize({1.0, 4.0});
+      CHECK_THROWS_AS(hillClimbing.optimise(), std::logic_error);
     }
 
     SECTION(
@@ -244,7 +245,8 @@ TEST_CASE("HillClimbing", "" ) {
     SECTION(
           "Throws an exception, if the MinimalStepSize is higher than MaximalStepSize" ) {
       hillClimbing.setMaximalStepSize({4.0, 4.2});
-      CHECK_THROWS_AS(hillClimbing.setMinimalStepSize({6.0, 6.0}), std::logic_error);
+      hillClimbing.setMinimalStepSize({6.0, 6.0});
+      CHECK_THROWS_AS(hillClimbing.optimise(), std::logic_error);
     }
 
     SECTION(
