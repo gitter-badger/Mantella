@@ -53,3 +53,5 @@ install_manifest.txt
 # Jekyll
 _site/
 .sass-cache/
+
+include/mantella_bits/config.hpp
