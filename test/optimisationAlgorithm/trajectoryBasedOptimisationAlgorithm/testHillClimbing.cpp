@@ -24,41 +24,6 @@ class TestHillClimbing : public mant::HillClimbing {
       neighbours_ = neighbours;
     }
 
-    void generateTestData(std::string path){
-      arma::Mat<double> parameters;
-      parameters.load(testDirectory + path);
-
-      std::shared_ptr<mant::OptimisationProblem> optimisationProblem(new mant::bbob::SphereFunction(2));
-
-      arma::Mat<double> velocities(2, parameters.n_cols - 1);
-      arma::Col<double> bestParameter(parameters.col(0));
-      double bestValue(optimisationProblem->getObjectiveValue(parameters.col(0)));
-
-      for (arma::uword i = 1; i < parameters.n_cols; i++){
-        if (parameters.col(i)(0) < -5.0) parameters.col(i)(0) = -5.0;
-        if (parameters.col(i)(0) > 5.0) parameters.col(i)(0) = 5.0;
-        if (parameters.col(i)(1) < -5.0) parameters.col(i)(1) = -5.0;
-        if (parameters.col(i)(1) > 5.0) parameters.col(i)(1) = 5.0;
-
-        velocities.col(i-1) = parameters.col(i) - bestParameter;
-
-        if (optimisationProblem->getObjectiveValue(parameters.col(i)) < bestValue) {
-          bestValue = optimisationProblem->getObjectiveValue(parameters.col(i));
-          bestParameter = parameters.col(i);
-        }
-      }
-
-      velocities.save(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_" + std::to_string(velocities.n_cols) + "x" + std::to_string(velocities.n_rows) +".velocities", arma::arma_ascii);
-
-      arma::Col<double> bestvalue{bestValue};
-      bestvalue.save(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x1.bestValue", arma::arma_ascii);
-
-      arma::Col<double> initParameter{parameters.col(0)};
-      initParameter.save(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x2.initParameter", arma::arma_ascii);
-
-      parameters.save(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_" + std::to_string(parameters.n_cols) + "x" + std::to_string(parameters.n_rows) +".expected", arma::arma_ascii);
-    }
-
   protected:
     arma::Col<double> getRandomNeighbour(
         const arma::Col<double>& parameter,
@@ -220,7 +185,6 @@ TEST_CASE("HillClimbing", "" ) {
 
     SECTION("Test the algorithm´s workflow"){
       TestHillClimbing testHillClimbing(optimisationProblem);
-      testHillClimbing.generateTestData("/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_12x2.testParameter");
 
       arma::Mat<double> velocities;
       REQUIRE(velocities.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_11x2.velocities"));
