@@ -184,7 +184,11 @@ TEST_CASE("HillClimbing", "" ) {
     }
 
     SECTION("Test the algorithm´s workflow"){
-      TestHillClimbing testHillClimbing(optimisationProblem);
+      arma::Col<double> parameterTranslation;
+      REQUIRE(parameterTranslation.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x2.parameterTranslation"));
+
+      arma::Col<double> objectiveValueTranslation;
+      REQUIRE(objectiveValueTranslation.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_1x1.objectiveValueTranslation"));
 
       arma::Mat<double> velocities;
       REQUIRE(velocities.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_11x2.velocities"));
@@ -198,6 +202,11 @@ TEST_CASE("HillClimbing", "" ) {
       arma::Mat<double> parameter;
       REQUIRE(parameter.load(testDirectory + "/data/optimisationAlgorithm/trajectoryBasedAlgrorithm/hillClimbing/hillclimbing_optimise_12x2.expected"));
 
+      optimisationProblem->setObjectiveValueTranslation(objectiveValueTranslation(0));
+      optimisationProblem->setParameterTranslation(parameterTranslation);
+      optimisationProblem->setAcceptableObjectiveValue(bestValue(0)-1);
+
+      TestHillClimbing testHillClimbing(optimisationProblem);
       testHillClimbing.setInitialParameter(initParameter);
       testHillClimbing.setMaximalNumberOfIterations(parameter.n_cols);
       testHillClimbing.setVelocities(velocities);
