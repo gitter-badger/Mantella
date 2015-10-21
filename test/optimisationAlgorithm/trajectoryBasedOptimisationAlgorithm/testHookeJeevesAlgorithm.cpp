@@ -51,11 +51,6 @@ TEST_CASE(
       CHECK_THROWS_AS(hookeJeevesAlgorithm.setStepSizeDecrease({0.0, 0.0}), std::logic_error);
     }
 
-    SECTION(
-          "Throws not an exception, if the StepSizeDecrease one" ) {
-      CHECK_NOTHROW(hookeJeevesAlgorithm.setStepSizeDecrease({1.0, 1.0}));
-
-    }
   }
 
   SECTION(
